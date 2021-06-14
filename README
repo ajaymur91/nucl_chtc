@@ -1,4 +1,3 @@
 check run_ti NSTEPS
 check sasa.sh N_TRIES
-check queue 10
-check N trials, N samples on generate_child.sh
+check if queue 100 (in job.sub) and N trials, N samples (in generate_child.sh) agreee
