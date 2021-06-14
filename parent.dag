@@ -1,0 +1,4 @@
+SCRIPT PRE job-batch ./create.sh $RETRY
+JOB job-batch job.sub
+SCRIPT POST job-batch ./generate_child.sh $RETRY
+RETRY job-batch 10

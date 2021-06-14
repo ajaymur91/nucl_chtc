@@ -1,0 +1,4 @@
+check run_ti NSTEPS
+check sasa.sh N_TRIES
+check queue 10
+check N trials, N samples on generate_child.sh
