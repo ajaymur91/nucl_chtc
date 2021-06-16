@@ -7,8 +7,11 @@
 #  Wherever you see $(Cluster), HTCondor will insert the queue number
 #  assigned to this set of jobs at the time of submission.
 universe = vanilla
+executable = run_graph.sh
+arguments = $(index)
+output = out/$(index).out
 log = log/$(Cluster).log
-error = err/$(Process).err
+error = err/$(index).err
 
 #+WantFlocking = true
 #+WantGlideIn = true
@@ -17,32 +20,29 @@ error = err/$(Process).err
 # Specify your executable (single binary or a script that runs several
 #  commands), arguments, and a files for HTCondor to store standard
 #  output (or "screen output").
-#  $(Process) will be a integer number for each job, starting with "0"
+#  $(index) will be a integer number for each job, starting with "0"
 #  and increasing for the relevant number of jobs.
-executable = run_graph.sh
-arguments = $(Process)
-output = out/$(Process).out
 #
 # Specify that HTCondor should transfer files to and from the
 #  computer where each job runs. The last of these lines *would* be
 #  used if there were any other files needed for the executable to run.
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = nucl.tar.gz,extract_connected.sh,generate_child.sh,insert.sh,M_ratio.sh,run_graph.sh,run_ti.sh,sasa.sh,work/$(Process).gro,Boltzmann.R,create.sh
-transfer_output_files = FE_$(Process).gro,mratio$(Process),FE_$(Process).txt,volume_$(Process).txt
+transfer_input_files = nucl.tar.gz,extract_connected.sh,generate_child.sh,insert.sh,M_ratio.sh,run_graph.sh,run_ti.sh,sasa.sh,work/$(index).gro,Boltzmann.R,create.sh
+transfer_output_files = FE_$(index).gro,mratio$(index),FE_$(index).txt,volume_$(index).txt
 #
 # Tell HTCondor what amount of compute resources
 #  each job will need on the computer where it runs.
 request_cpus = 1
-request_memory = 0.5GB
-request_disk = 2.5GB
+request_memory = 1GB
+request_disk = 3GB
 
 # Send the job to Held state on failure. 
-on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)  
+# on_exit_hold = (ExitBySignal == True) || (ExitCode != 0)  
 #
 # # Periodically retry the jobs for 3 times with an interval 0.1 hour.   
-periodic_release =  (JobStatus==5) && (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*6))
+# periodic_release =  (JobStatus==5) && (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*6))
 #
 # Tell HTCondor to run 1 instances of our job:
 #
-queue 10
+queue 1

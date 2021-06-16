@@ -1,4 +1,4 @@
 SCRIPT PRE job-batch ./create.sh $RETRY
-JOB job-batch job.sub
+SUBDAG EXTERNAL job-batch batch.dag
 SCRIPT POST job-batch ./generate_child.sh $RETRY
 RETRY job-batch 10

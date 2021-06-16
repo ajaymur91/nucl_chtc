@@ -5,6 +5,8 @@
 #        echo " Usage: bash generate_child.sh <cluster_size> <trials> <samples>" >&2
 #        exit 2
 #fi
+eval "$(conda shell.bash hook)"
+conda activate NUCL
 
 N=$(($1+1))
 T=100
