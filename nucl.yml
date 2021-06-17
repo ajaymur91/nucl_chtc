@@ -1,0 +1,13 @@
+name: nucl
+channels:
+- ajaymur91
+- conda-forge
+dependencies:
+- plumed=2.7.1
+- gromacs=2019.6
+- alchemical-analysis=1.0.2
+- networkx=2.2
+- pydot=1.2.4
+- r-essentials=1.1
+- r-base=3.2.2
+
