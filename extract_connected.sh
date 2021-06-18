@@ -15,7 +15,7 @@ echo 'q' | gmx make_ndx -f "$GRO" &> /dev/null
 echo "$(cat << EOF
         Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
         WHOLEMOLECULES ENTITY0=Ion
-        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
+        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} 
         dfs: DFSCLUSTERING MATRIX=mat
         nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
         PRINT ARG=nat FILE=NAT
