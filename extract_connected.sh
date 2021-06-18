@@ -12,16 +12,28 @@ cd tempdir
 
 # Make index file
 echo 'q' | gmx make_ndx -f "$GRO" &> /dev/null
+
+gmx trjconv -f $GRO -o ion.gro -s $GRO -vel no &> /dev/null << EOF 
+Ion
+EOF
+
+gmx trjconv -f ion.gro -s ion.gro -pbc cluster -center -o box.gro &> /dev/null << EOF
+Ion
+Ion
+Ion
+EOF
+
+gmx editconf -f box.gro -bt cubic -d 0.35 -o pad.gro &> /dev/null
+
 echo "$(cat << EOF
         Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
-        WHOLEMOLECULES ENTITY0=Ion
-        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} 
+        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
         dfs: DFSCLUSTERING MATRIX=mat
         nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
         PRINT ARG=nat FILE=NAT
         DUMPGRAPH MATRIX=mat FILE=contact.dot
 EOF
-)" | plumed driver --igro "$GRO" --plumed /dev/stdin &> /dev/null;
+)" | plumed driver --igro pad.gro --plumed /dev/stdin &> /dev/null;
 
 #####################################################################
 cat << EOF > contact.py

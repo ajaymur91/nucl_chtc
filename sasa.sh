@@ -100,8 +100,7 @@ for i in `seq 0 $(($TRIALS-1))`; do
 		{ gmx insert-molecules -f pad.gro -ci Na.gro -scale 0 -o gro_Na/"$(($i*$PROC +$k))".gro -nmol 1 &> /dev/null
 		echo "$(cat << EOF
                 Ion: GROUP NDX_FILE=index_Na.ndx NDX_GROUP=Ion
-                WHOLEMOLECULES ENTITY0=Ion
-                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} 
+                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
                 dfs: DFSCLUSTERING MATRIX=mat
                 nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
                 PRINT ARG=nat FILE=NAT
@@ -151,8 +150,7 @@ for i in `seq 0 $(($TRIALS-1))`; do
 		{ gmx insert-molecules -f pad.gro -ci Cl.gro -scale 0 -o gro_Cl/"$(($i*$PROC +$k))".gro -nmol 1 &> /dev/null
 		echo "$(cat << EOF
                 Ion: GROUP NDX_FILE=index_Cl.ndx NDX_GROUP=Ion
-                WHOLEMOLECULES ENTITY0=Ion
-                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} 
+                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
                 dfs: DFSCLUSTERING MATRIX=mat
                 nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
                 PRINT ARG=nat FILE=NAT

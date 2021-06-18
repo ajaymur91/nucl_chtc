@@ -31,8 +31,7 @@ gmx editconf -f box.gro -bt cubic -d 0.7 -o pad.gro &> /dev/null
 # Create matrix.dat - plumed creates a contact matrix for the cluster
 cat > matrix.dat << EOF
 Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
-WHOLEMOLECULES ENTITY0=Ion
-mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} 
+mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
 dfs: DFSCLUSTERING MATRIX=mat
 nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
 PRINT ARG=nat FILE=NAT

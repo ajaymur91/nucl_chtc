@@ -93,8 +93,7 @@ for i in `seq 0 $(($TRIALS-1))`; do
 	       	gmx insert-molecules -f gro/"$(($i*$PROC +$k))"-1.gro -ci Cl.gro -scale 0 -o gro/"$(($i*$PROC +$k))".gro -nmol 1 &> /dev/null
 		echo "
                 Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
-                WHOLEMOLECULES ENTITY0=Ion
-                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} 
+                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
                 dfs: DFSCLUSTERING MATRIX=mat
                 nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
                 PRINT ARG=nat FILE=NAT$k

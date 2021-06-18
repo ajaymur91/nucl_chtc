@@ -275,8 +275,7 @@ echo 'q' | $GMX make_ndx -f $GRO &> /dev/null
 
    echo "$(cat << EOF
         Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
-        WHOLEMOLECULES ENTITY0=Ion
-        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} 
+        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
         dfs: DFSCLUSTERING MATRIX=mat
         nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
         PRINT ARG=nat FILE=NAT
@@ -319,14 +318,13 @@ EOF
    	   then
            # Create plumed.dat to implement MST
            echo "Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion" > plumed.dat
-           echo -e "WHOLEMOLECULES ENTITY0=Ion\n" >> plumed.dat
 
            n=1
            awk '{print $1+1","$2+1}' mst > edges
            while read p
            do
            echo "#D($p)" >> plumed.dat
-           echo "DISTANCE ATOMS=$p LABEL=d$n NOPBC" >> plumed.dat
+           echo "DISTANCE ATOMS=$p LABEL=d$n" >> plumed.dat
            echo "UPPER_WALLS ARG=d$n AT=0.35 KAPPA=1000.0 EXP=2 EPS=1 OFFSET=0 LABEL=uwall$n" >> plumed.dat
            echo " " >> plumed.dat
            n=$((n+1))
