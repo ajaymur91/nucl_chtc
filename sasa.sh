@@ -1,6 +1,6 @@
 #!/bin/bash
 PROC=1
-TRIALS=${2:-500}
+TRIALS=${2:-50}
 WDIR=$(pwd)
 GRO=$1
 shape=${4:-cubic}
@@ -66,13 +66,19 @@ EOF
 
 cp $WDIR/$GRO $WDIR/tempdir/$GRO
 
-# cluster -> center -> extract ions
-gmx trjconv -f $GRO -o ion.gro -s $GRO -vel no &> /dev/null << EOF 
-Ion
-EOF
+# make index file
+echo q | gmx make_ndx -f $GRO &> /dev/null
 
-gmx trjconv -f ion.gro -s ion.gro -pbc cluster -center -o box.gro &> /dev/null << EOF
-Ion
+# pbc Wrap cluster 
+echo "$(cat << EOF 
+Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
+WRAPAROUND ATOMS=Ion AROUND=1
+DUMPATOMS FILE=dump.gro ATOMS=Ion
+EOF
+)" | plumed driver --igro $GRO --plumed /dev/stdin &> /dev/null 
+
+# Center cluster in box
+gmx trjconv -f dump.gro -s $GRO -center -o box.gro &> /dev/null << EOF
 Ion
 Ion
 EOF
@@ -185,4 +191,4 @@ paste child_*/volume_* | awk '{print ($1+$2)*0.5}' | tee -a volume.txt
 # copy results back
 cd $WDIR
 cp $WDIR/tempdir/volume.txt $WDIR/volume_$GRO.txt
-rm -rf tempdir
+#rm -rf tempdir
