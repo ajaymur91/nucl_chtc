@@ -10,15 +10,19 @@ cd tempdir
 # Place your code here 
 ######################################################################
 
-# Make index file
-echo 'q' | gmx make_ndx -f "$GRO" &> /dev/null
+# make index file
+echo q | gmx make_ndx -f $GRO &> /dev/null
 
-gmx trjconv -f $GRO -o ion.gro -s $GRO -vel no &> /dev/null << EOF 
-Ion
+# pbc Wrap cluster 
+echo "$(cat << EOF 
+Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
+WRAPAROUND ATOMS=Ion AROUND=1
+DUMPATOMS FILE=dump.gro ATOMS=Ion
 EOF
+)" | plumed driver --igro $GRO --plumed /dev/stdin &> /dev/null 
 
-gmx trjconv -f ion.gro -s ion.gro -pbc cluster -center -o box.gro &> /dev/null << EOF
-Ion
+# Center cluster in box
+gmx trjconv -f dump.gro -s $GRO -center -o box.gro &> /dev/null << EOF
 Ion
 Ion
 EOF
@@ -27,7 +31,7 @@ gmx editconf -f box.gro -bt cubic -d 0.35 -o pad.gro &> /dev/null
 
 echo "$(cat << EOF
         Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
-        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
+        mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000}
         dfs: DFSCLUSTERING MATRIX=mat
         nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
         PRINT ARG=nat FILE=NAT

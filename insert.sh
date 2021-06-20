@@ -65,13 +65,19 @@ EOF
 
 cp $WDIR/$GRO $WDIR/tempdir/$GRO
 
-# cluster -> center -> extract ions
-gmx trjconv -f $GRO -o ion.gro -s $GRO -vel no &> /dev/null << EOF 
-Ion
-EOF
+# make index file
+echo q | gmx make_ndx -f $GRO &> /dev/null
 
-gmx trjconv -f ion.gro -s ion.gro -pbc cluster -center -o box.gro &> /dev/null << EOF
-Ion
+# pbc Wrap cluster 
+echo "$(cat << EOF 
+Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
+WRAPAROUND ATOMS=Ion AROUND=1
+DUMPATOMS FILE=dump.gro ATOMS=Ion
+EOF
+)" | plumed driver --igro $GRO --plumed /dev/stdin &> /dev/null 
+
+# Center cluster in box
+gmx trjconv -f dump.gro -s $GRO -center -o box.gro &> /dev/null << EOF
 Ion
 Ion
 EOF
@@ -93,7 +99,7 @@ for i in `seq 0 $(($TRIALS-1))`; do
 	       	gmx insert-molecules -f gro/"$(($i*$PROC +$k))"-1.gro -ci Cl.gro -scale 0 -o gro/"$(($i*$PROC +$k))".gro -nmol 1 &> /dev/null
 		echo "
                 Ion: GROUP NDX_FILE=index.ndx NDX_GROUP=Ion
-                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000} NOPBC
+                mat: CONTACT_MATRIX ATOMS=Ion SWITCH={RATIONAL R_0=0.35 NN=10000}
                 dfs: DFSCLUSTERING MATRIX=mat
                 nat: CLUSTER_NATOMS CLUSTERS=dfs CLUSTER=1
                 PRINT ARG=nat FILE=NAT$k
