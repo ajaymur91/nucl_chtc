@@ -1,6 +1,6 @@
 #!/bin/bash
 PROC=1
-TRIALS=${2:-50}
+TRIALS=${2:-500}
 WDIR=$(pwd)
 GRO=$1
 shape=${4:-cubic}
@@ -191,4 +191,4 @@ paste child_*/volume_* | awk '{print ($1+$2)*0.5}' | tee -a volume.txt
 # copy results back
 cd $WDIR
 cp $WDIR/tempdir/volume.txt $WDIR/volume_$GRO.txt
-#rm -rf tempdir
+rm -rf tempdir
