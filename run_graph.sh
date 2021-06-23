@@ -29,7 +29,7 @@ cd ..
 # if file does not exist or empty make a files with NA
 [ -s volume_"$n".txt ] || echo NA > volume_"$n".txt
 [ -s FE_"$n".gro ] || echo NA > FE_"$n".gro
-[ -s FE_"$n".txt ] || echo NA > FE_"$n".txt
+[ -s FE_"$n".txt ] || echo "NA NA" > FE_"$n".txt
 [ -s mratio"$n" ] || echo NA > mratio"$n"
 
 exit 0
