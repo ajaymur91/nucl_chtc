@@ -159,7 +159,7 @@ fourierspacing          = 0.16      ; grid spacing for FFT
 tcoupl                  = nose-hoover           ; modified Berendsen thermostat
 tc-grps                 = system                ; two coupling groups - more accurate
 tau_t                   = 2.0                     ; time constant, in ps
-ref_t                   = 300                   ; reference temperature, one for each group, in K
+ref_t                   = 298                   ; reference temperature, one for each group, in K
 
 ;Pressure coupling is on
 ;pcoupl                  = parrinello-rahman     ; Pressure coupling on in NPT
@@ -231,7 +231,7 @@ fourierspacing          = 0.16      ; grid spacing for FFT
 tcoupl                  = nose-hoover           ; modified Berendsen thermostat
 tc-grps                 = system                ; two coupling groups - more accurate
 tau_t                   = 2.0                     ; time constant, in ps
-ref_t                   = 300                   ; reference temperature, one for each group, in K
+ref_t                   = 298                   ; reference temperature, one for each group, in K
 
 pbc                     = xyz       ; 3-D PBC
 

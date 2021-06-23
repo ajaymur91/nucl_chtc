@@ -6,4 +6,5 @@ mkdir -p err
 mkdir -p out
 
 rm -rf work/*
+rm -rf Pr.txt
 cp -r N_$RETRY/*.gro ./work/
