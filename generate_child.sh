@@ -8,7 +8,7 @@
 eval "$(conda shell.bash hook)"
 conda activate NUCL
 
-N=$(($1+1))
+N=$(($1+2))
 T=100
 Ns=100
 Gm=0.1
@@ -19,6 +19,9 @@ eval echo FE_{0..$((T-1))}.txt | xargs -n 1 tail -n 1 -q | awk '{print $2}' > TI
 
 [ -s Pr.txt ] || for i in `seq 1 $Ns`; do     echo 1; done > Pr.txt
 echo "Gm=$Gm"
+
+mkdir -p results/N$N
+cp Pr.txt results/N$N/
 
 Rscript --vanilla Boltzmann.R $N $Ns $Gm
 mkdir -p N_$(($N+1))
@@ -42,7 +45,6 @@ mv Veff.txt results/N$N/
 mv volume*.txt results/N$N/
 mv boltzmann.txt results/N$N/
 mv dG.txt results/N$N/
-cp Pr.txt results/N$N/
 cp P.txt results/N$N/
 
 

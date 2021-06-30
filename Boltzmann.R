@@ -25,8 +25,8 @@ TI <- read.table('./TI.txt')$V1/kT
 Pr <- read.table('./Pr.txt')$V1
 
 dG <- -log(Mrat*Veff/( ((N+1)^2) * (Lp*Ln)^3)) + TI -log(Pr)
-dG <- dG -min(na.omit(dG))
 write.table(x = dG,row.names = FALSE,col.names = FALSE,file = 'dG.txt')
+dG <- dG -min(na.omit(dG))
 P <- exp(-Gm*dG)/sum(exp(-na.omit(Gm*dG)))
 P[is.na(P)] <- 0
 S <- sample(x = c(0: (length(P)-1) ),prob = P,replace = TRUE,size = Ns)
