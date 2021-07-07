@@ -3,7 +3,7 @@ PROC=1
 TRIALS=${2:-500}
 WDIR=$(pwd)
 GRO=$1
-shape=${4:-cubic}
+shape=${4:-triclinic}
 export PLUMED_MAXBACKUP=-1
 export GMX_MAXBACKUP=-1
 #echo "$shape box"
@@ -144,7 +144,9 @@ V_parent=$(tail -n 1 V_parent_Cl.xvg | awk '{print $2}')
 # insert Cl
 gmx insert-molecules -f pad.gro -ci Cl.gro -radius 0 -scale 0 -o insert1.gro -nmol 1 &> /dev/null
 echo q | gmx make_ndx -f insert1.gro -o index_Cl.ndx &> /dev/null 
-n=$(grep "Na\|Cl" insert1.gro | wc -l)
+#n=$(grep "Na\|Cl" insert1.gro | wc -l)
+n=$(awk 'NR==2 {print $1}' insert1.gro)
+
 rm -rf insert1.gro 
 
 mkdir -p gro_Cl

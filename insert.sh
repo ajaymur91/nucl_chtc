@@ -3,7 +3,7 @@ PROC=1
 TRIALS=${2:-100000}
 WDIR=$(pwd)
 GRO=$1
-shape=${4:-cubic}
+shape=${4:-triclinic}
 export PLUMED_MAXBACKUP=-1
 export GMX_MAXBACKUP=-1
 #echo "$shape box"
